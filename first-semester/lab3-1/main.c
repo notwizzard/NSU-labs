@@ -7,36 +7,29 @@ void swap(int *x, int *y) {
     *y = a;
 }
 
-void Heapify(int *array, int length, int index) {
-    int left = index * 2;
-    int right = index * 2 + 1;
-    int localMaxIndex = index;
+int Partition(int *array, int left, int right) {
+    int pivot = array[(left + right) / 2];
+    int l = left;
+    int r = right;
 
-    if (left <= length && array[left] > array[localMaxIndex])
-        localMaxIndex = left;
-
-    if (right <= length && array[right] > array[localMaxIndex])
-        localMaxIndex = right;
-
-    if (localMaxIndex != index) {
-        swap(&array[index], &array[localMaxIndex]);
-        Heapify(array, length, localMaxIndex);
+    while (l < r) {
+        while (array[l] < pivot)
+            l++;
+        while (array[r] > pivot)
+            r--;
+        if (l >= r)
+            return r;
+        swap(&array[l++], &array[r--]);
     }
 
+    return r;
 }
 
-void BuildMaxHeap(int *array, int length) {
-    for (int i = length / 2; i >= 1; i--) {
-        Heapify(array, length, i);
-    }
-}
-
-void HeapSort(int *array, int length) {
-    BuildMaxHeap(array, length);
-    for (int i = length; i >= 1; i--) {
-        swap(&array[1], &array[i]);
-        length--;
-        Heapify(array, length, 1);
+void QuickSort(int *array, int left, int right) {
+    if (left < right) {
+        int pivotIndex = Partition(array, left, right);
+        QuickSort(array, left, pivotIndex);
+        QuickSort(array, pivotIndex + 1, right);
     }
 }
 
@@ -45,15 +38,15 @@ int main() {
     int length;
     if (!scanf("%d", &length)) return 0;
 
-    int *array = malloc(sizeof(int) * (length + 1));
+    int *array = malloc(sizeof(int) * length);
 
-    for (int i = 1; i <= length; i++) {
+    for (int i = 0; i < length; i++) {
         if (!scanf("%d", &array[i])) return 0;
     }
 
-    HeapSort(array, length);
+    QuickSort(array, 0, length - 1);
 
-    for (int i = 1; i <= length; i++) {
+    for (int i = 0; i < length; i++) {
         printf("%d ", array[i]);
     }
 

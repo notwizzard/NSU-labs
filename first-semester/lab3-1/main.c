@@ -12,7 +12,7 @@ int Partition(int *array, int left, int right) {
     int l = left;
     int r = right;
 
-    while (l < r) {
+    while (l <= r) {
         while (array[l] < pivot)
             l++;
         while (array[r] > pivot)
